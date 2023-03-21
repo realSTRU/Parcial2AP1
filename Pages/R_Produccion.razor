@@ -1,0 +1,258 @@
+@page "/R_Produccion"
+@page "/R_Produccion/{ProducidoId:int}"
+
+
+@inject ProducidoBLL producidos
+@inject ProductoBLL productos
+
+
+<PageTitle>Registro de produccion.</PageTitle>
+
+<body>
+    <EditForm model ="producido" OnSubmit="Guardar">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+            <div class="container">
+                <div class ="card text-dark bg-light mb-3 shadow-lg">
+                    <div class="card-header">
+                        <h3>Entrada de productos empacados</h3>
+                    </div>
+                    <div class ="card-body">
+                        <div class="row">
+                            <div class ="col-4">
+                                <label for="ProducidoId">ProducidoId:</label>
+                                <div class ="input-group">
+                                    <input @bind-value="producido.ProducidoId"type ="text" id="ProducidoId" class="form-control"/>
+                                    <button type="button" class="btn btn-dark"><i class="oi oi-magnifying-glass"/>Buscar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class ="col-3">
+                                <label for="Fecha">Fecha:</label>
+                                <input disabled ="true" @bind-value="producido.Fecha"type="date" class="form-control" id="Fecha" />
+                            </div>
+                            
+                        </div>
+
+                        <div class="row">
+                            <div class ="col-6">
+                                <label for="Concepto">Concepto:</label>
+                                <input @bind-value="producido.Concepto" type="text" class ="form-control" id ="Concepto">
+                            </div>
+                        </div>
+                        <hr>
+                        <fieldset>
+                            <legend>Utilizados:</legend>
+                            <div class="row">
+                                <div class="col-4">
+                                    <label for="SelectP">Producto:</label>
+                                    <select @bind ="detalle.ProductoId"class="form-select">
+                                        @foreach(var item in productos.GetList())
+                                        {
+                                            <option value="@item.ProductoId">@item.Descripcion</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-4">
+                                    <label for="CantidadP">Cantidad:</label>
+                                    <div class="input-group">
+                                        <input @bind-value ="detalle.Cantidad" type="Text" id="CantidadP"class="form-control"/>
+                                        <button type="button" class="btn btn-dark" @onclick="AgregarDetalle">Agregar <i class="oi oi-plus"/></button>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <table class ="table">
+                                <thead>
+                                    <tr>
+                                        <th>ProductoId</th>
+                                        <th>Descripcion</th>
+                                        <th>Cantidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in producido.ProducidoDetalle)
+                                    {
+                                        <tr>
+                                            <td>@item.ProductoId</td>
+                                            <td>@productos.Buscar(item.ProducidoId).Descripcion</td>
+                                            <td>@item.Cantidad</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <hr>
+                            <div class="row d-flex justify-content-center">
+                                <div class ="col-5">
+                                    <label for="Total">Cantidades totales utilizadas:</label>
+                                    <input @bind-value="TotalProducido" disabled ="true" type="text" class="form-control"    />
+                                </div>
+                            </div>
+                        </fieldset>
+                        <hr>
+                        <fieldset>
+                            <legend>Producido:</legend>
+                            <div class="row">
+                                <div class="col-3">
+                                    <select class="form-select">
+
+                                    </select>
+                                </div>
+                                <div class="col-2">
+                                    
+                                    <input type="text" class="form-control" placeholder="Cantidad"/>
+                                </div>
+                            </div>
+                        </fieldset>
+                        
+                    </div>
+                    <div class="card-footer d-flex justify-content-center">
+                        <div class="row">
+                            <div class="btn-group">
+                                <button class="btn btn-dark" type="button" @onclick="Guardar"><i class="oi oi-document"/><b> Guardar</b></button>
+                                <button class="btn btn-secondary" type="button"@onclick="Nuevo"><i class="oi oi-file"/><b> Nuevo/Limpiar</b></button>
+                                <button class="btn btn-dark" type="button" @onclick="Eliminar"><i class="oi oi-trash"/><b> Eliminar</b></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                        
+                        
+                    
+
+
+                    
+                   
+
+
+                    
+                   
+                   
+                </div>
+            </div>
+
+        
+
+        
+        
+
+
+    </EditForm>
+</body>
+
+
+@code
+{
+    [Parameter]
+    public int ProducidoId {get; set;}
+
+    public Producido producido {get; set;} = new Producido();
+
+    public Producto producto {get; set;} = new Producto();
+
+    public ProducidoDetalle detalle {get; set;} = new ProducidoDetalle();
+
+    public int TotalProducido {get; set;} = 0;
+
+    public List<Producto> L_Producto {get; set;} = new List<Producto>();
+
+    
+
+
+
+    protected override void OnInitialized()
+    {
+        L_Producto = productos.GetList();
+        if(ProducidoId > 0)
+        {
+            this.producido.ProducidoId = ProducidoId;
+            this.Buscar();
+        }
+    }
+
+        
+    void Nuevo()
+    {
+        this.producido = new Producido();
+    }
+
+    void Buscar()
+    {
+        var ProducidoEncontrado= producidos.Buscar(this.producido.ProducidoId);
+
+        if(ProducidoEncontrado != null)
+        {
+            this.producido = ProducidoEncontrado;
+
+            if(producido.ProducidoDetalle != null)
+            {
+                foreach(var item in producido.ProducidoDetalle)
+                {
+                    TotalProducido += item.Cantidad;
+                }
+            }
+        }
+    }
+
+        void AgregarDetalle()
+        {
+            int DetalleTotal = 0;
+
+            if(this.producido.ProducidoDetalle != null)
+            {
+                foreach(var item in producido.ProducidoDetalle)
+                {
+                    DetalleTotal += item.Cantidad;
+                }
+            }
+            DetalleTotal += this.detalle.Cantidad;
+            TotalProducido = DetalleTotal;
+            producido.ProducidoDetalle.Add(this.detalle);
+            
+            this.detalle = new ProducidoDetalle();
+
+        }
+
+        void Guardar()
+        {
+            if(Validar())
+            {
+                producidos.Guardar(this.producido);
+                Nuevo();
+            }
+            else
+            {
+                Console.WriteLine("El valor de los detalles no coincide con el valor de pago");
+            }
+        }
+
+        bool Validar()
+        {
+            return (this.producido.Concepto != null && this.producido.Fecha != null && this.producido.ProducidoDetalle != null);
+        }
+
+        void Eliminar()
+        {
+
+            if(Validar())
+            {
+                if(producidos.Eliminar(this.producido))
+                {
+                    Nuevo();
+                }
+                else
+                {
+                    Console.WriteLine("No se ha borrado nada");
+                }
+                
+            }
+
+        }
+
+
+}
+
+

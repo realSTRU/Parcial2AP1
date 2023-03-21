@@ -17,6 +17,7 @@ public class Producto
 
     public Producto()
     {
+        
         Existencia = 0;
     }
 
