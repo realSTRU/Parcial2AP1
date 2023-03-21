@@ -27,12 +27,15 @@ public class ProducidoBLL
 
     public bool Insertar(Producido producido)
     {
+        Console.WriteLine("entre a insertar \n\n\n\n\n\n\n\n\n\n\n\n");
         try
         {
             if(producido != null)
             {
+                
                 if(producido.ProducidoDetalle != null)
                 {
+                   
                     foreach(var item in producido.ProducidoDetalle)
                     {
                         var producto = _contexto.Producto.Find(item.ProductoId);
@@ -43,11 +46,14 @@ public class ProducidoBLL
                             _contexto.Entry(producto).State = EntityState.Modified;
                         }
                     }
+                    
                 }
-
+                
+                
                 _contexto.Producido.Add(producido);
-                bool paso = _contexto.SaveChanges() > 0;
-                _contexto.Entry(producido).State = EntityState.Detached;
+                
+                bool paso =_contexto.SaveChanges() > 0;
+                _contexto.Entry(producido).State =EntityState.Detached;
                 return paso;
             }
             else

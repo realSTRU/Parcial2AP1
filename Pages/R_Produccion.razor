@@ -77,7 +77,7 @@
                                     {
                                         <tr>
                                             <td>@item.ProductoId</td>
-                                            <td>@productos.Buscar(item.ProducidoId).Descripcion</td>
+                                            <td>@productos.Buscar(item.ProductoId)?.Descripcion</td>
                                             <td>@item.Cantidad</td>
                                         </tr>
                                     }
@@ -177,6 +177,7 @@
     void Nuevo()
     {
         this.producido = new Producido();
+        TotalProducido = 0 ;
     }
 
     void Buscar()
@@ -208,11 +209,12 @@
                     DetalleTotal += item.Cantidad;
                 }
             }
+            
             DetalleTotal += this.detalle.Cantidad;
             TotalProducido = DetalleTotal;
             producido.ProducidoDetalle.Add(this.detalle);
-            
             this.detalle = new ProducidoDetalle();
+            
 
         }
 
@@ -225,7 +227,7 @@
             }
             else
             {
-                Console.WriteLine("El valor de los detalles no coincide con el valor de pago");
+                Console.WriteLine("No se guardo nada");
             }
         }
 

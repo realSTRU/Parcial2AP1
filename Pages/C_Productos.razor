@@ -1,0 +1,41 @@
+@page "/C_Productos"
+
+@inject ProductoBLL productos
+<PageTitle>Consulta Productos.</PageTitle>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ProductoId#</th>
+            <th>Descripcion</th>
+            <th>Costo</th>
+            <th>Precio</th>
+            <th>Existencia</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in L_Productos)
+        {
+            <tr>
+                <td>@item.ProductoId</td>
+                <td>@item.Descripcion</td>
+                <td>@item.Costo</td>
+                <td>@item.Precio</td>
+                <td>@item.Existencia</td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@code
+{
+    public List<Producto> L_Productos {get; set;} = new List<Producto>();
+
+        protected override void OnInitialized()
+        {
+            L_Productos = productos.GetList();
+        }
+}
+
