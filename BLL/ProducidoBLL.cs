@@ -27,7 +27,8 @@ public class ProducidoBLL
 
     public bool Insertar(Producido producido)
     {
-        Console.WriteLine("entre a insertar \n\n\n\n\n\n\n\n\n\n\n\n");
+        
+        
         try
         {
             if(producido != null)
@@ -54,6 +55,7 @@ public class ProducidoBLL
                 
                 bool paso =_contexto.SaveChanges() > 0;
                 _contexto.Entry(producido).State =EntityState.Detached;
+                
                 return paso;
             }
             else
@@ -110,6 +112,7 @@ public class ProducidoBLL
 
                 var DetallesAModificar = _contexto.Set<ProducidoDetalle>().Where(p => p.ProducidoId == producido.ProducidoId);
                 _contexto.Set<ProducidoDetalle>().RemoveRange(DetallesAModificar);
+                _contexto.Set<ProducidoDetalle>().AddRange(producido.ProducidoDetalle);
                 _contexto.Entry(producido).State = EntityState.Modified;
 
                 return _contexto.SaveChanges() > 0;
@@ -135,33 +138,33 @@ public class ProducidoBLL
         try{
             if(producido != null)
             {
-                    var ProducidoAnterior = 
-                    _contexto.Producido
-                    .Where(p => p.ProducidoId == producido.ProducidoId)
-                    .Include(p => p.ProducidoDetalle)
-                    .AsNoTracking()
-                    .SingleOrDefault();
 
-                if(ProducidoAnterior != null)
+                
+                
+                foreach(var item in producido.ProducidoDetalle)
                 {
-                    foreach(var item in ProducidoAnterior.ProducidoDetalle)
+                    var producto = _contexto.Producto.Find(item.ProductoId);
+
+                    if(producto != null)
                     {
-                        var producto = _contexto.Producto.Find(item.ProductoId);
-
-                        if(producto != null)
-                        {
-                            producto.Existencia += item.Cantidad;
-                            _contexto.Entry(producto).State = EntityState.Modified;
-                        }
-
+                        Console.WriteLine($"{item.Cantidad}|{_contexto.Producto.Find(item.ProductoId).Descripcion}|+{_contexto.Producto.Find(item.ProductoId).Existencia}\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                        producto.Existencia += item.Cantidad;
+                        _contexto.Entry(producto).State = EntityState.Modified;
+                        _contexto.SaveChanges();
+                         Console.WriteLine($"Ahora es{item.Cantidad}|{_contexto.Producto.Find(item.ProductoId).Descripcion}|+{_contexto.Producto.Find(item.ProductoId).Existencia}\n\n\n\n\n\n\n\n\n\n\n\n\n");
                     }
+
                 }
+                
 
                 var DetallesAEliminar = _contexto.Set<ProducidoDetalle>().Where(p => p.ProducidoId == producido.ProducidoId);
                 _contexto.Set<ProducidoDetalle>().RemoveRange(DetallesAEliminar);
-                _contexto.Entry(producido).State = EntityState.Deleted;
-
+                _contexto.Database.ExecuteSqlRaw($"DELETE FROM Producido WHERE ProducidoId = {producido.ProducidoId}");
                 return _contexto.SaveChanges() > 0;
+
+
+
+                
             }
             else
             {

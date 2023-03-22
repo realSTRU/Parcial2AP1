@@ -24,6 +24,7 @@ public class Producido
 public class ProducidoDetalle 
 {
     [Key]
+    public int DetalleId {get; set;}
     public int ProducidoId {get; set;}
 
     public int ProductoId {get; set;}

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Parcial2AP1.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20230320224635_Inicial")]
+    [Migration("20230322064002_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -42,16 +42,22 @@ namespace Parcial2AP1.Migrations
 
             modelBuilder.Entity("ProducidoDetalle", b =>
                 {
-                    b.Property<int>("ProducidoId")
+                    b.Property<int>("DetalleId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Cantidad")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("ProducidoId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("ProductoId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("ProducidoId");
+                    b.HasKey("DetalleId");
+
+                    b.HasIndex("ProducidoId");
 
                     b.ToTable("ProducidoDetalle");
                 });

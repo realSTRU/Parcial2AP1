@@ -39,16 +39,22 @@ namespace Parcial2AP1.Migrations
 
             modelBuilder.Entity("ProducidoDetalle", b =>
                 {
-                    b.Property<int>("ProducidoId")
+                    b.Property<int>("DetalleId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Cantidad")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("ProducidoId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("ProductoId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("ProducidoId");
+                    b.HasKey("DetalleId");
+
+                    b.HasIndex("ProducidoId");
 
                     b.ToTable("ProducidoDetalle");
                 });

@@ -9,7 +9,7 @@
 <PageTitle>Registro de produccion.</PageTitle>
 
 <body>
-    <EditForm model ="producido" OnSubmit="Guardar">
+    <EditForm model ="producido">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
             <div class="container">
@@ -23,7 +23,7 @@
                                 <label for="ProducidoId">ProducidoId:</label>
                                 <div class ="input-group">
                                     <input @bind-value="producido.ProducidoId"type ="text" id="ProducidoId" class="form-control"/>
-                                    <button type="button" class="btn btn-dark"><i class="oi oi-magnifying-glass"/>Buscar</button>
+                                    <button type="button" class="btn btn-dark" @onclick="Buscar"><i class="oi oi-magnifying-glass"/>Buscar</button>
                                 </div>
                             </div>
                         </div>
@@ -73,7 +73,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var item in producido.ProducidoDetalle)
+                                    @foreach (var item in this.producido.ProducidoDetalle)
                                     {
                                         <tr>
                                             <td>@item.ProductoId</td>
@@ -182,7 +182,9 @@
 
     void Buscar()
     {
+        
         var ProducidoEncontrado= producidos.Buscar(this.producido.ProducidoId);
+        Nuevo();
 
         if(ProducidoEncontrado != null)
         {
@@ -190,10 +192,15 @@
 
             if(producido.ProducidoDetalle != null)
             {
+                Console.WriteLine("Tiene un detalle");
                 foreach(var item in producido.ProducidoDetalle)
                 {
                     TotalProducido += item.Cantidad;
                 }
+            }
+            else
+            {
+                Console.WriteLine("Lista de detalle vacia");
             }
         }
     }
@@ -202,7 +209,7 @@
         {
             int DetalleTotal = 0;
 
-            if(this.producido.ProducidoDetalle != null)
+            if(producido.ProducidoDetalle != null)
             {
                 foreach(var item in producido.ProducidoDetalle)
                 {
@@ -212,7 +219,7 @@
             
             DetalleTotal += this.detalle.Cantidad;
             TotalProducido = DetalleTotal;
-            producido.ProducidoDetalle.Add(this.detalle);
+            producido.ProducidoDetalle?.Add(this.detalle);
             this.detalle = new ProducidoDetalle();
             
 

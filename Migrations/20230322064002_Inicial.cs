@@ -48,13 +48,15 @@ namespace Parcial2AP1.Migrations
                 name: "ProducidoDetalle",
                 columns: table => new
                 {
+                    DetalleId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     ProducidoId = table.Column<int>(type: "INTEGER", nullable: false),
                     ProductoId = table.Column<int>(type: "INTEGER", nullable: false),
                     Cantidad = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProducidoDetalle", x => x.ProducidoId);
+                    table.PrimaryKey("PK_ProducidoDetalle", x => x.DetalleId);
                     table.ForeignKey(
                         name: "FK_ProducidoDetalle_Producido_ProducidoId",
                         column: x => x.ProducidoId,
@@ -73,6 +75,11 @@ namespace Parcial2AP1.Migrations
                     { 3, 60.0, "Cajuil salado", 5, 90.0 },
                     { 4, 33.0, "Almendras", 2, 50.0 }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProducidoDetalle_ProducidoId",
+                table: "ProducidoDetalle",
+                column: "ProducidoId");
         }
 
         /// <inheritdoc />

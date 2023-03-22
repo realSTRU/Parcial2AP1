@@ -15,6 +15,8 @@ public class Producto
 
     public int Existencia {get; set;}
 
+    
+
     public Producto()
     {
         
