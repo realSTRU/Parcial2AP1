@@ -114,8 +114,17 @@ public class ProducidoBLL
                 _contexto.Set<ProducidoDetalle>().RemoveRange(DetallesAModificar);
                 _contexto.Set<ProducidoDetalle>().AddRange(producido.ProducidoDetalle);
                 _contexto.Entry(producido).State = EntityState.Modified;
+                bool paso = _contexto.SaveChanges() > 0;
 
-                return _contexto.SaveChanges() > 0;
+                _contexto.Entry(producido).State = EntityState.Detached;
+
+                return paso;
+
+                
+
+                
+
+                
                 
 
                 

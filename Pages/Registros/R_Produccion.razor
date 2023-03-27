@@ -4,6 +4,8 @@
 
 @inject ProducidoBLL producidos
 @inject ProductoBLL productos
+@inject NotificationService notificaciones
+
 
 
 <PageTitle>Registro de produccion.</PageTitle>
@@ -17,6 +19,7 @@
                     <div class="card-header">
                         <h3>Entrada de productos empacados</h3>
                     </div>
+                    @* IdProduccido *@
                     <div class ="card-body">
                         <div class="row">
                             <div class ="col-4">
@@ -27,7 +30,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        @* Fecha del producto producido *@
                         <div class="row">
                             <div class ="col-3">
                                 <label for="Fecha">Fecha:</label>
@@ -35,7 +38,7 @@
                             </div>
                             
                         </div>
-
+                        @* Concepto del producito producido que sera el nuevo producto *@
                         <div class="row">
                             <div class ="col-6">
                                 <label for="Concepto">Concepto:</label>
@@ -43,6 +46,7 @@
                             </div>
                         </div>
                         <hr>
+                        @* Fieldset con las especificaciones del detalle *@
                         <fieldset>
                             <legend>Utilizados:</legend>
                             <div class="row">
@@ -64,6 +68,7 @@
                                     
                                 </div>
                             </div>
+                            @* Tabla de los productos que se utilizaran para formar el nuevo *@
                             <table class ="table">
                                 <thead>
                                     <tr>
@@ -84,6 +89,7 @@
                                 </tbody>
                             </table>
                             <hr>
+                            @* Cantidad total de los productos utilizados para realizar en nuevo *@
                             <div class="row d-flex justify-content-center">
                                 <div class ="col-5">
                                     <label for="Total">Cantidades totales utilizadas:</label>
@@ -92,22 +98,24 @@
                             </div>
                         </fieldset>
                         <hr>
+                        @* Espacio para indicar la cantidad que producida del nuevo producto y la UNIDAD en que se vendera. *@
                         <fieldset>
                             <legend>Producido:</legend>
                             <div class="row">
                                 <div class="col-3">
-                                    <select class="form-select">
+                                    <select  disabled="true" class="form-select">
 
                                     </select>
                                 </div>
                                 <div class="col-2">
                                     
-                                    <input type="text" class="form-control" placeholder="Cantidad"/>
+                                    <input type="text" class="form-control" placeholder="Cantidad" @bind-value ="producido.cantidad"/>
                                 </div>
                             </div>
                         </fieldset>
                         
                     </div>
+                    @* Botones (Guardar, Limpiar y Eliminar) *@
                     <div class="card-footer d-flex justify-content-center">
                         <div class="row">
                             <div class="btn-group">
@@ -178,6 +186,7 @@
     {
         this.producido = new Producido();
         TotalProducido = 0 ;
+        
     }
 
     void Buscar()
@@ -189,6 +198,14 @@
         if(ProducidoEncontrado != null)
         {
             this.producido = ProducidoEncontrado;
+            ShowNotification( new NotificationMessage
+            {
+                Severity = NotificationSeverity.Info,
+                Summary = "Busqueda completada satisfactoriamente!",
+                Detail = "Informacion de una produccion encontrada",
+                Duration = 4000
+
+            });
 
             if(producido.ProducidoDetalle != null)
             {
@@ -205,63 +222,115 @@
         }
     }
 
-        void AgregarDetalle()
-        {
-            int DetalleTotal = 0;
+    void AgregarDetalle()
+    {
+        int DetalleTotal = 0;
 
-            if(producido.ProducidoDetalle != null)
+        if(producido.ProducidoDetalle != null)
+        {
+            foreach(var item in producido.ProducidoDetalle)
             {
-                foreach(var item in producido.ProducidoDetalle)
-                {
-                    DetalleTotal += item.Cantidad;
-                }
+                DetalleTotal += item.Cantidad;
             }
-            
-            DetalleTotal += this.detalle.Cantidad;
-            TotalProducido = DetalleTotal;
-            producido.ProducidoDetalle?.Add(this.detalle);
-            this.detalle = new ProducidoDetalle();
-            
-
         }
-
-        void Guardar()
-        {
-            if(Validar())
+            
+        DetalleTotal += this.detalle.Cantidad;
+        TotalProducido = DetalleTotal;
+        producido.ProducidoDetalle?.Add(this.detalle);
+        this.detalle = new ProducidoDetalle();
+        
+        ShowNotification( new NotificationMessage
             {
-                producidos.Guardar(this.producido);
+                Severity = NotificationSeverity.Success,
+                Summary = "Registro Actualizado",
+                Detail = "Se ha agregado un detalle",
+                Duration = 4000
+
+            });
+
+    }
+
+    void Guardar()
+    {
+        if(Validar())
+        {
+            producidos.Guardar(this.producido);
+            Nuevo();
+            ShowNotification( new NotificationMessage
+            {
+                Severity = NotificationSeverity.Success,
+                Summary = "Registro Actualizado",
+                Detail = "Se ha guardado Correctamente",
+                Duration = 4000
+
+            });
+        }
+        else
+        {
+            Console.WriteLine("No se guardo nada");
+            ShowNotification( new NotificationMessage
+            {
+                Severity = NotificationSeverity.Error,
+                Summary = "Registro Actualizado",
+                Detail = "Informacion no valida o campos vacios",
+                Duration = 4000
+
+            });
+        }
+    }
+
+    bool Validar()
+    {
+        return (this.producido.Concepto != null && this.producido.Fecha != null && this.producido.ProducidoDetalle != null && (this.producido.cantidad > 0 && this.producido.cantidad!= null));
+    }
+
+    void Eliminar()
+    {
+
+        if(Validar())
+        {
+            if(producidos.Eliminar(this.producido))
+            {
                 Nuevo();
+                ShowNotification( new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Registro Actualizado",
+                    Detail = "Borrado correctamente",
+                    Duration = 4000
+
+                });
             }
             else
             {
-                Console.WriteLine("No se guardo nada");
+                Console.WriteLine("No se ha borrado nada");
             }
         }
-
-        bool Validar()
+        else
         {
-            return (this.producido.Concepto != null && this.producido.Fecha != null && this.producido.ProducidoDetalle != null);
-        }
-
-        void Eliminar()
-        {
-
-            if(Validar())
+            ShowNotification( new NotificationMessage
             {
-                if(producidos.Eliminar(this.producido))
-                {
-                    Nuevo();
-                }
-                else
-                {
-                    Console.WriteLine("No se ha borrado nada");
-                }
-                
-            }
+                Severity = NotificationSeverity.Error,
+                Summary = "Error al eliminar",
+                Detail = "no hay una produccion seleccionada",
+                Duration = 4000
 
+            });
         }
-
+        
+            
+        
+    }
+    void ShowNotification(NotificationMessage message)
+    {
+        notificaciones.Notify(message);
+    }        
 
 }
+    
+   
+
+
+
 
 

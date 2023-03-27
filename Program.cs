@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
+using Radzen;
+using Radzen.Blazor;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +19,7 @@ builder.Services.AddDbContext<Contexto>(options => options.UseSqlite(ConStr));
 
 //scopes
 builder.Services.AddScoped<ProducidoBLL>();
+builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<ProductoBLL>();
 
 var app = builder.Build();
