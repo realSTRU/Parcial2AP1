@@ -3,26 +3,21 @@
 @inject ProducidoBLL producido
 <PageTitle>Consulta Productos.</PageTitle>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>ProducidoId#</th>
-            <th>Descripcion</th>
-            <th>Fecha</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(var item in L_Producido)
-        {
-            <tr>
-                <td>@item.ProducidoId</td>
-                <td>@item.Concepto</td>
-                <td>@item.Fecha</td>
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced"
+    AllowGrouping="true" AllowSorting="true" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
+    Data="L_Producido" TItem="Producido" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
 
-            </tr>
-        }
-    </tbody>
-</table>
+        <Columns>
+            
+            <RadzenDataGridColumn TItem="Producido" Property="ProducidoId" Title="ProducidoId"/>
+            <RadzenDataGridColumn TItem="Producido" Property="Concepto" Title="Concepto"/>
+            <RadzenDataGridColumn TItem="Producido" Property="Fecha" Title="Fecha"/>
+            
+
+
+        </Columns>
+
+    </RadzenDataGrid>
 
 
 @code

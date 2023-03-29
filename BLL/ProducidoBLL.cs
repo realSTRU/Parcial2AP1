@@ -166,10 +166,15 @@ public class ProducidoBLL
                 }
                 
 
+                
                 var DetallesAEliminar = _contexto.Set<ProducidoDetalle>().Where(p => p.ProducidoId == producido.ProducidoId);
                 _contexto.Set<ProducidoDetalle>().RemoveRange(DetallesAEliminar);
-                _contexto.Database.ExecuteSqlRaw($"DELETE FROM Producido WHERE ProducidoId = {producido.ProducidoId}");
-                return _contexto.SaveChanges() > 0;
+                _contexto.Producido.Remove(producido);
+                bool elimino = _contexto.SaveChanges() > 0;
+
+                _contexto.Entry(producido).State = EntityState.Detached;
+
+                return elimino;
 
 
 

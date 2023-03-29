@@ -31,5 +31,39 @@ public class ProductoBLL
         return _context.Producto.Find(ProductoId);
     }
 
+    public bool Guardar(Producto producto)
+    {
+        if(!Existe(producto.ProductoId))
+        {
+           return Guardar(producto);
+        }
+        else
+        {
+            return Modificar(producto);
+        }
+    }
+
+    public bool Insertar(Producto producto)
+    {
+        _context.Producto.Add(producto);
+
+        bool guardo = _context.SaveChanges() > 0;
+
+        _context.Entry(producto).State = EntityState.Detached;
+
+        return guardo;
+    }
+
+    public bool Modificar(Producto producto)
+    {
+        _context.Entry(producto).State = EntityState.Modified;
+
+        bool guardo = _context.SaveChanges() > 0;
+
+        _context.Entry(producto).State = EntityState.Detached;
+
+        return guardo;
+    }
+
 
 }

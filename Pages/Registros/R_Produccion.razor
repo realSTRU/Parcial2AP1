@@ -11,7 +11,7 @@
 <PageTitle>Registro de produccion.</PageTitle>
 
 <body>
-    <EditForm model ="producido">
+    <EditForm model ="Producido" OnValidSubmit="Guardar">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
             <div class="container">
@@ -26,7 +26,9 @@
                                 <label for="ProducidoId">ProducidoId:</label>
                                 <div class ="input-group">
                                     <input @bind-value="producido.ProducidoId"type ="text" id="ProducidoId" class="form-control"/>
+                                    
                                     <button type="button" class="btn btn-dark" @onclick="Buscar"><i class="oi oi-magnifying-glass"/>Buscar</button>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -34,17 +36,21 @@
                         <div class="row">
                             <div class ="col-3">
                                 <label for="Fecha">Fecha:</label>
-                                <input disabled ="true" @bind-value="producido.Fecha"type="date" class="form-control" id="Fecha" />
+                                <input TValue="DateOnly" disabled ="true" @bind-value="producido.Fecha"type="date" class="form-control" id="Fecha" />
+                                <ValidationMessage For="@(() => producido.Fecha)"/>
                             </div>
+                            
                             
                         </div>
                         @* Concepto del producito producido que sera el nuevo producto *@
                         <div class="row">
                             <div class ="col-6">
                                 <label for="Concepto">Concepto:</label>
-                                <input @bind-value="producido.Concepto" type="text" class ="form-control" id ="Concepto">
+                                <input @bind-value="producido.Concepto"  class ="form-control" id ="Concepto">
+                                <ValidationMessage For="@(() => producido.Concepto)"/>
                             </div>
                         </div>
+                        <ValidationMessage For="@(() => producido.Concepto)"/>
                         <hr>
                         @* Fieldset con las especificaciones del detalle *@
                         <fieldset>
@@ -103,13 +109,16 @@
                             <legend>Producido:</legend>
                             <div class="row">
                                 <div class="col-3">
-                                    <select  disabled="true" class="form-select">
-
+                                    <select disabled = "true" @bind ="producto.ProductoId" class="form-select" >
+                                        @foreach (var item in L_Producto)
+                                        {
+                                            <option value="@item.ProductoId">@item.Descripcion</option>
+                                        }
                                     </select>
                                 </div>
                                 <div class="col-2">
                                     
-                                    <input type="text" class="form-control" placeholder="Cantidad" @bind-value ="producido.cantidad"/>
+                                    <input disabled= "true" @bind-value ="cantidad" type="text" class="form-control" placeholder="Cantidad"/>
                                 </div>
                             </div>
                         </fieldset>
@@ -119,7 +128,7 @@
                     <div class="card-footer d-flex justify-content-center">
                         <div class="row">
                             <div class="btn-group">
-                                <button class="btn btn-dark" type="button" @onclick="Guardar"><i class="oi oi-document"/><b> Guardar</b></button>
+                                <button class="btn btn-dark" type="submit" @onclick="Guardar"><i class="oi oi-document"/><b> Guardar</b></button>
                                 <button class="btn btn-secondary" type="button"@onclick="Nuevo"><i class="oi oi-file"/><b> Nuevo/Limpiar</b></button>
                                 <button class="btn btn-dark" type="button" @onclick="Eliminar"><i class="oi oi-trash"/><b> Eliminar</b></button>
                             </div>
@@ -167,6 +176,7 @@
 
     public List<Producto> L_Producto {get; set;} = new List<Producto>();
 
+    public int cantidad {get; set;}
     
 
 
@@ -186,6 +196,15 @@
     {
         this.producido = new Producido();
         TotalProducido = 0 ;
+         ShowNotification( new NotificationMessage
+            {
+                Severity = NotificationSeverity.Info,
+                Summary = "Se ha limpiado el registro",
+                Duration = 4000
+
+            });
+
+
         
     }
 
@@ -220,41 +239,71 @@
                 Console.WriteLine("Lista de detalle vacia");
             }
         }
+        else
+        {
+            ShowNotification( new NotificationMessage
+            {
+                Severity = NotificationSeverity.Error,
+                Summary = "Busqueda completada satisfactoriamente!",
+                Detail = "No se encontro nada!",
+                Duration = 4000
+
+            });
+        }
     }
 
     void AgregarDetalle()
     {
-        int DetalleTotal = 0;
+        var existencia = productos.Buscar(this.detalle.ProductoId).Existencia;
+        int op = existencia - this.detalle.Cantidad;
 
-        if(producido.ProducidoDetalle != null)
+        if( op >= 0)
         {
-            foreach(var item in producido.ProducidoDetalle)
+            int DetalleTotal = 0;
+
+            if(producido.ProducidoDetalle != null)
             {
-                DetalleTotal += item.Cantidad;
+                foreach(var item in producido.ProducidoDetalle)
+                {
+                    DetalleTotal += item.Cantidad;
+                }
             }
-        }
+                
+            DetalleTotal += this.detalle.Cantidad;
+            TotalProducido = DetalleTotal;
+            producido.ProducidoDetalle?.Add(this.detalle);
+            this.detalle = new ProducidoDetalle();
             
-        DetalleTotal += this.detalle.Cantidad;
-        TotalProducido = DetalleTotal;
-        producido.ProducidoDetalle?.Add(this.detalle);
-        this.detalle = new ProducidoDetalle();
-        
-        ShowNotification( new NotificationMessage
-            {
-                Severity = NotificationSeverity.Success,
-                Summary = "Registro Actualizado",
-                Detail = "Se ha agregado un detalle",
-                Duration = 4000
+            ShowNotification( new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Registro Actualizado",
+                    Detail = "Se ha agregado un detalle",
+                    Duration = 4000
+                });
 
-            });
-
+        }
+        else
+        {
+            ShowNotification( new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "No hay suficiente cantidad de este producto",
+                    Detail = $"De {productos.Buscar(this.detalle.ProductoId).Descripcion} solo quedan ({productos.Buscar(this.detalle.ProductoId).Existencia})",
+                    Duration = 4000
+                });
+        }
     }
 
     void Guardar()
     {
+        
         if(Validar())
         {
             producidos.Guardar(this.producido);
+
+           
+            
             Nuevo();
             ShowNotification( new NotificationMessage
             {
@@ -271,17 +320,26 @@
             ShowNotification( new NotificationMessage
             {
                 Severity = NotificationSeverity.Error,
-                Summary = "Registro Actualizado",
+                Summary = "No se a guardado nada",
                 Detail = "Informacion no valida o campos vacios",
                 Duration = 4000
 
             });
         }
+
+        
+
+       
     }
 
     bool Validar()
     {
-        return (this.producido.Concepto != null && this.producido.Fecha != null && this.producido.ProducidoDetalle != null && (this.producido.cantidad > 0 && this.producido.cantidad!= null));
+        return (this.producido.Concepto != null && this.producido.Fecha != null && this.producido.ProducidoDetalle != null );
+    }
+
+    bool ValidarProducido()
+    {
+        return (this.cantidad != null && this.producto.ProductoId != null);
     }
 
     void Eliminar()
@@ -289,8 +347,9 @@
 
         if(Validar())
         {
-            if(producidos.Eliminar(this.producido))
+            if(Validar())
             {
+                producidos.Eliminar(this.producido);
                 Nuevo();
                 ShowNotification( new NotificationMessage
                 {

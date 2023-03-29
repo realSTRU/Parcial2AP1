@@ -7,11 +7,11 @@ public class Producido
     [Key]
     public int ProducidoId { get; set; }
 
+    [Required(ErrorMessage = "La Fecha es un campo obligatorio.")]
     public DateOnly Fecha {get; set;} = DateOnly.FromDateTime(DateTime.Now);
 
+    [Required(ErrorMessage = "El concepto es obligatorio")]
     public string Concepto {get; set;}
-
-    public int cantidad {get; set;}
 
     [ForeignKey("ProducidoId")]
     public List<ProducidoDetalle> ProducidoDetalle {get; set;} = new List<ProducidoDetalle>();
@@ -30,5 +30,13 @@ public class ProducidoDetalle
     public int ProductoId {get; set;}
 
     public int Cantidad {get; set;}
+
+   
+
+    
+
+    
+
+ 
 
 }

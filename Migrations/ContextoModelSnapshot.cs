@@ -29,9 +29,6 @@ namespace Parcial2AP1.Migrations
                     b.Property<DateOnly>("Fecha")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("cantidad")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("ProducidoId");
 
                     b.ToTable("Producido");

@@ -24,7 +24,8 @@ public class Contexto : DbContext
                 Descripcion ="Mani Japones",
                 Costo = 20,
                 Precio = 35,
-                Existencia = 12
+                Existencia = 12,
+                
 
             },
              new Producto
@@ -33,7 +34,10 @@ public class Contexto : DbContext
                 Descripcion ="Pistacho",
                 Costo = 50,
                 Precio = 75,
-                Existencia = 10
+                Existencia = 10,
+                
+
+                
 
             },
              new Producto
@@ -42,7 +46,9 @@ public class Contexto : DbContext
                 Descripcion ="Cajuil salado",
                 Costo = 60,
                 Precio = 90,
-                Existencia = 5
+                Existencia = 5,
+                
+
 
             },
              new Producto
@@ -51,7 +57,9 @@ public class Contexto : DbContext
                 Descripcion ="Almendras",
                 Costo = 33,
                 Precio = 50,
-                Existencia = 2
+                Existencia = 2,
+                
+
 
             }
        

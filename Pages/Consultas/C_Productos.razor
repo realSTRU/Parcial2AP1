@@ -3,30 +3,24 @@
 @inject ProductoBLL productos
 <PageTitle>Consulta Productos.</PageTitle>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>ProductoId#</th>
-            <th>Descripcion</th>
-            <th>Costo</th>
-            <th>Precio</th>
-            <th>Existencia</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(var item in L_Productos)
-        {
-            <tr>
-                <td>@item.ProductoId</td>
-                <td>@item.Descripcion</td>
-                <td>@item.Costo</td>
-                <td>@item.Precio</td>
-                <td>@item.Existencia</td>
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced"
+    AllowGrouping="true" AllowSorting="true" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
+    Data= "L_Productos" TItem="Producto" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
 
-            </tr>
-        }
-    </tbody>
-</table>
+        <Columns>
+            
+            <RadzenDataGridColumn TItem="Producto" Property="ProductoId" Title="ProductoId#"/>
+            <RadzenDataGridColumn TItem="Producto" Property="Descripcion" Title="Descripcion"/>
+            <RadzenDataGridColumn TItem="Producto" Property="Costo" Title="Costo"/>
+            <RadzenDataGridColumn TItem="Producto" Property="Precio" Title="Precio"/>
+            <RadzenDataGridColumn TItem="Producto" Property="Existencia" Title="Existencia"/>
+            
+
+
+        </Columns>
+
+    </RadzenDataGrid>
+
 
 
 @code
