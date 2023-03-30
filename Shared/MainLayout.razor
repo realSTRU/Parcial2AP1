@@ -2,18 +2,66 @@
 
 <PageTitle>Parcial2AP1</PageTitle>
 <RadzenNotification></RadzenNotification>
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-    
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
 
-        <article class="content px-4">
+<head>
+    <style>
+        body {
+            
+            background-size:cover ;
+            background-attachment: fixed;
+            opacity:1;
+            font-family: monospace;
+            text-align: center;
+            background-image: url('https://images.unsplash.com/photo-1626697556426-8a55a8af4999?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTF8fGZydXRvcyUyMHNlY29zfGVufDB8fDB8fA%3D%3D&w=1000&q=80');
+            
+        }
+
+       
+    </style>
+</head>
+<RadzenLayout style="height: 100vh;">
+    <RadzenHeader  style="background-color:#6c757d; sdisplay: flex; justify-content: space-between; border:none;">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center"  Gap="0">
+            <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)"   style= "border:none;  border-top-right-radius: 25px; border-bottom-right-radius: 25px;"/>
+            
+        </RadzenStack>
+
+    
+
+
+    </RadzenHeader>
+ <RadzenSidebar @bind-Expanded="@sidebar1Expanded"style="background-color:#28363c;" >
+        
+        
+        <RadzenPanelMenu style="background-color:#28363c;" Multiple="false" >
+
+                    <RadzenPanelMenuItem Selected="true" icon="local_shipping" style="background-color:#28363c;" Text="Produccion" >
+                        <RadzenPanelMenuItem Selected="true"  icon="search" Text="Consultar" Path="C_Produccion"  />
+                        <RadzenPanelMenuItem Selected="true"  icon="add" Text="Registrar" Path="/R_Produccion" />
+                    </RadzenPanelMenuItem>
+
+
+                    <RadzenPanelMenuItem Selected="true"  icon="inventory" style="background-color:#28363c;" Text="Productos" >
+                        <RadzenPanelMenuItem Selected="true"  icon="search" Text="Consulta Productos" Path="C_Productos" />
+                        
+                    </RadzenPanelMenuItem>
+
+                    
+        </RadzenPanelMenu>
+        <div class="rz-p-4">
+        </div>
+    </RadzenSidebar>
+    <RadzenBody>
+        <div class="rz-p-4">
             @Body
-        </article>
-    </main>
-</div>
+        </div>
+    </RadzenBody>
+</RadzenLayout>
+
+
+@code {
+    bool sidebar1Expanded = true;
+
+
+}
+

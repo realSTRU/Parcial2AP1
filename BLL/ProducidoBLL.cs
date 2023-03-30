@@ -120,16 +120,6 @@ public class ProducidoBLL
 
                 return paso;
 
-                
-
-                
-
-                
-                
-
-                
-
-
             }
             else
             {
@@ -148,8 +138,6 @@ public class ProducidoBLL
             if(producido != null)
             {
 
-                
-                
                 foreach(var item in producido.ProducidoDetalle)
                 {
                     var producto = _contexto.Producto.Find(item.ProductoId);
@@ -165,7 +153,6 @@ public class ProducidoBLL
 
                 }
                 
-
                 
                 var DetallesAEliminar = _contexto.Set<ProducidoDetalle>().Where(p => p.ProducidoId == producido.ProducidoId);
                 _contexto.Set<ProducidoDetalle>().RemoveRange(DetallesAEliminar);
@@ -176,17 +163,12 @@ public class ProducidoBLL
 
                 return elimino;
 
-
-
                 
             }
             else
             {
                 return false;
             }
-
-                
-
 
         }
         catch

@@ -27,8 +27,10 @@ public class ProducidoDetalle
     public int DetalleId {get; set;}
     public int ProducidoId {get; set;}
 
+    [Required(ErrorMessage = "El detalle debe de contener un producto especificado")]
     public int ProductoId {get; set;}
 
+    [Required(ErrorMessage = "El detalle debe de tener una cantidad especificada")]
     public int Cantidad {get; set;}
 
    

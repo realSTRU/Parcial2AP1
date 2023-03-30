@@ -10,10 +10,10 @@
 
 <PageTitle>Registro de produccion.</PageTitle>
 
-<body>
-    <EditForm model ="Producido" OnValidSubmit="Guardar">
+
+    <RadzenTemplateForm TItem="Producido" Data="@producido" Submit="Guardar">
         <DataAnnotationsValidator/>
-        <ValidationSummary/>
+       
             <div class="container">
                 <div class ="card text-dark bg-light mb-3 shadow-lg">
                     <div class="card-header">
@@ -37,20 +37,18 @@
                             <div class ="col-3">
                                 <label for="Fecha">Fecha:</label>
                                 <input TValue="DateOnly" disabled ="true" @bind-value="producido.Fecha"type="date" class="form-control" id="Fecha" />
-                                <ValidationMessage For="@(() => producido.Fecha)"/>
                             </div>
                             
                             
                         </div>
-                        @* Concepto del producito producido que sera el nuevo producto *@
+                        @* Concepto del producido producido que sera el nuevo producto *@
                         <div class="row">
                             <div class ="col-6">
                                 <label for="Concepto">Concepto:</label>
-                                <input @bind-value="producido.Concepto"  class ="form-control" id ="Concepto">
-                                <ValidationMessage For="@(() => producido.Concepto)"/>
+                                <input @bind-value="producido.Concepto" Name="Concepto" class ="form-control" id ="Concepto">
                             </div>
                         </div>
-                        <ValidationMessage For="@(() => producido.Concepto)"/>
+                        
                         <hr>
                         @* Fieldset con las especificaciones del detalle *@
                         <fieldset>
@@ -79,7 +77,7 @@
                                 <thead>
                                     <tr>
                                         <th>ProductoId</th>
-                                        <th>Descripcion</th>
+                                        <th>Descripción</th>
                                         <th>Cantidad</th>
                                     </tr>
                                 </thead>
@@ -157,8 +155,7 @@
         
 
 
-    </EditForm>
-</body>
+    </RadzenTemplateForm>
 
 
 @code
@@ -244,7 +241,7 @@
             ShowNotification( new NotificationMessage
             {
                 Severity = NotificationSeverity.Error,
-                Summary = "Busqueda completada satisfactoriamente!",
+                Summary = "Error de busqueda!",
                 Detail = "No se encontro nada!",
                 Duration = 4000
 
@@ -254,44 +251,68 @@
 
     void AgregarDetalle()
     {
-        var existencia = productos.Buscar(this.detalle.ProductoId).Existencia;
-        int op = existencia - this.detalle.Cantidad;
-
-        if( op >= 0)
+        if(ValidarDetalle())
         {
-            int DetalleTotal = 0;
+            var existencia = productos.Buscar(this.detalle.ProductoId).Existencia;
+            int op = existencia - this.detalle.Cantidad;
+            bool existe = false;
 
-            if(producido.ProducidoDetalle != null)
+            if( op >= 0)
             {
-                foreach(var item in producido.ProducidoDetalle)
-                {
-                    DetalleTotal += item.Cantidad;
-                }
-            }
-                
-            DetalleTotal += this.detalle.Cantidad;
-            TotalProducido = DetalleTotal;
-            producido.ProducidoDetalle?.Add(this.detalle);
-            this.detalle = new ProducidoDetalle();
-            
-            ShowNotification( new NotificationMessage
-                {
-                    Severity = NotificationSeverity.Success,
-                    Summary = "Registro Actualizado",
-                    Detail = "Se ha agregado un detalle",
-                    Duration = 4000
-                });
+                int DetalleTotal = 0;
 
+                if(producido.ProducidoDetalle != null)
+                {
+                    foreach(var item in producido.ProducidoDetalle)
+                    {
+                        DetalleTotal += item.Cantidad;
+                        if(item.ProductoId == this.detalle.ProductoId)
+                        {
+                            existe = true;
+                            item.Cantidad+=this.detalle.Cantidad;
+                        }
+                    }
+                }
+                    
+                DetalleTotal += this.detalle.Cantidad;
+                TotalProducido = DetalleTotal;
+                if(existe == false)
+                {
+                    producido.ProducidoDetalle?.Add(this.detalle);
+                }
+                
+                this.detalle = new ProducidoDetalle();
+                
+                ShowNotification( new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Success,
+                        Summary = "Registro Actualizado",
+                        Detail = "Se ha agregado un detalle",
+                        Duration = 4000
+                    });
+
+            }
+            else
+            {
+                ShowNotification( new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Error,
+                        Summary = "No hay suficiente cantidad de este producto",
+                        Detail = $"De {productos.Buscar(this.detalle.ProductoId).Descripcion} solo quedan ({productos.Buscar(this.detalle.ProductoId).Existencia})",
+                        Duration = 4000
+                    });
+            }
         }
         else
         {
             ShowNotification( new NotificationMessage
-                {
-                    Severity = NotificationSeverity.Error,
-                    Summary = "No hay suficiente cantidad de este producto",
-                    Detail = $"De {productos.Buscar(this.detalle.ProductoId).Descripcion} solo quedan ({productos.Buscar(this.detalle.ProductoId).Existencia})",
-                    Duration = 4000
-                });
+                    {
+                        Severity = NotificationSeverity.Error,
+                        Summary = "Error al agregar detalle",
+                        Detail = "Debe de tener un producto y cantidades especificados",
+                        Duration = 4000
+                    });
+
         }
     }
 
@@ -300,19 +321,32 @@
         
         if(Validar())
         {
-            producidos.Guardar(this.producido);
-
-           
-            
-            Nuevo();
-            ShowNotification( new NotificationMessage
+            if(this.producido.ProducidoDetalle.Count >= 2)
             {
-                Severity = NotificationSeverity.Success,
-                Summary = "Registro Actualizado",
-                Detail = "Se ha guardado Correctamente",
-                Duration = 4000
+                producidos.Guardar(this.producido);
 
-            });
+                Nuevo();
+                ShowNotification( new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Success,
+                    Summary = "Registro Actualizado",
+                    Detail = "Se ha guardado Correctamente",
+                    Duration = 4000
+
+                });
+            }
+            else
+            {
+                 ShowNotification( new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "La produccion de productos debe de contener al menos dos dos productos",
+                    Detail = "Introduzca Un detalle",
+                    Duration = 4000
+
+                });
+            }
+            
         }
         else
         {
@@ -337,9 +371,14 @@
         return (this.producido.Concepto != null && this.producido.Fecha != null && this.producido.ProducidoDetalle != null );
     }
 
-    bool ValidarProducido()
+    bool ValidarProducido() 
     {
         return (this.cantidad != null && this.producto.ProductoId != null);
+    }
+
+    bool ValidarDetalle()
+    {
+        return (this.detalle.ProductoId != null && this.detalle.ProductoId>0 && this.detalle.Cantidad>0);
     }
 
     void Eliminar()
@@ -372,7 +411,8 @@
                 Severity = NotificationSeverity.Error,
                 Summary = "Error al eliminar",
                 Detail = "no hay una produccion seleccionada",
-                Duration = 4000
+                Duration =4000 
+                
 
             });
         }
