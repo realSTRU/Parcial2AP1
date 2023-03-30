@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Parcial2AP1.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20230330170134_Inical")]
-    partial class Inical
+    [Migration("20230330175217_Incial")]
+    partial class Incial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

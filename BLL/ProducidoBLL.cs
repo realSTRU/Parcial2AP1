@@ -89,8 +89,9 @@ public class ProducidoBLL
 
                         if(producto != null)
                         {
+                            _contexto.Producto.Update(producto);
                             producto.Existencia += item.Cantidad;
-                            _contexto.Entry(producto).State = EntityState.Modified;
+                            
                         }
 
                     }
@@ -104,14 +105,12 @@ public class ProducidoBLL
                         if(producto != null)
                         {
                             producto.Existencia -= item.Cantidad;
-                            _contexto.Entry(producto).State = EntityState.Modified;
+                            _contexto.Producto.Update(producto);
                             
                         }
                     }
                 }
-
-                var DetallesAModificar = _contexto.Set<ProducidoDetalle>().Where(p => p.ProducidoId == producido.ProducidoId);
-                _contexto.Set<ProducidoDetalle>().RemoveRange(DetallesAModificar);
+                _contexto.Set<ProducidoDetalle>().RemoveRange(ProducidoAnterior.ProducidoDetalle);
                 _contexto.Set<ProducidoDetalle>().AddRange(producido.ProducidoDetalle);
                 _contexto.Entry(producido).State = EntityState.Modified;
                 bool paso = _contexto.SaveChanges() > 0;
@@ -144,18 +143,16 @@ public class ProducidoBLL
 
                     if(producto != null)
                     {
-                        Console.WriteLine($"{item.Cantidad}|{_contexto.Producto.Find(item.ProductoId).Descripcion}|+{_contexto.Producto.Find(item.ProductoId).Existencia}\n\n\n\n\n\n\n\n\n\n\n\n\n");
                         producto.Existencia += item.Cantidad;
-                        _contexto.Entry(producto).State = EntityState.Modified;
+                        _contexto.Producto.Update(producto);
                         _contexto.SaveChanges();
-                         Console.WriteLine($"Ahora es{item.Cantidad}|{_contexto.Producto.Find(item.ProductoId).Descripcion}|+{_contexto.Producto.Find(item.ProductoId).Existencia}\n\n\n\n\n\n\n\n\n\n\n\n\n");
                     }
 
                 }
                 
                 
-                var DetallesAEliminar = _contexto.Set<ProducidoDetalle>().Where(p => p.ProducidoId == producido.ProducidoId);
-                _contexto.Set<ProducidoDetalle>().RemoveRange(DetallesAEliminar);
+
+                _contexto.Set<ProducidoDetalle>().RemoveRange(producido.ProducidoDetalle);
                 _contexto.Producido.Remove(producido);
                 bool elimino = _contexto.SaveChanges() > 0;
 

@@ -386,9 +386,7 @@
 
         if(Validar())
         {
-            if(Validar())
-            {
-                producidos.Eliminar(this.producido);
+            producidos.Eliminar(this.producido);
                 Nuevo();
                 ShowNotification( new NotificationMessage
                 {
@@ -398,11 +396,6 @@
                     Duration = 4000
 
                 });
-            }
-            else
-            {
-                Console.WriteLine("No se ha borrado nada");
-            }
         }
         else
         {

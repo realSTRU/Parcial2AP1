@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Parcial2AP1.Migrations
 {
     /// <inheritdoc />
-    public partial class Inical : Migration
+    public partial class Incial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
