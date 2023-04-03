@@ -107,7 +107,7 @@
                             <legend>Producido:</legend>
                             <div class="row">
                                 <div class="col-3">
-                                    <select disabled   @bind ="producto.ProductoId" class="form-select" >
+                                    <select   @bind ="producido.ProductoId" class="form-select" >
                                         @foreach (var item in L_Producto)
                                         {
                                             <option value="@item.ProductoId">@item.Descripcion</option>
@@ -116,7 +116,7 @@
                                 </div>
                                 <div class="col-2">
                                     
-                                    <input  disabled @bind-value ="cantidad" type="text" class="form-control" placeholder="Cantidad"/>
+                                    <input  @bind-value ="producido.cantidad" type="text" class="form-control" placeholder="Cantidad"/>
                                 </div>
                             </div>
                         </fieldset>
@@ -133,19 +133,6 @@
                         </div>
                     </div>
 
-                    
-                        
-                        
-                    
-
-
-                    
-                   
-
-
-                    
-                   
-                   
                 </div>
             </div>
 
@@ -165,7 +152,7 @@
 
     public Producido producido {get; set;} = new Producido();
 
-    public Producto producto {get; set;} = new Producto();
+    
 
     public ProducidoDetalle detalle {get; set;} = new ProducidoDetalle();
 
@@ -175,7 +162,7 @@
 
     public int cantidad {get; set;}
 
-    protected string Catalizador = "disabled" ;
+    
     
 
 
@@ -284,10 +271,7 @@
                     producido.ProducidoDetalle?.Add(this.detalle);
                 }
 
-                if(this.producido.ProducidoDetalle.Count >= 2)
-                {
-                    Catalizador = "";
-                }
+              
                 
                 this.detalle = new ProducidoDetalle();
                 
@@ -329,6 +313,7 @@
         
         if(Validar())
         {
+            
             if(this.producido.ProducidoDetalle.Count >= 2)
             {
                 producidos.Guardar(this.producido);
@@ -354,7 +339,6 @@
 
                 });
             }
-
             
             
         }
@@ -378,12 +362,12 @@
 
     bool Validar()
     {
-        return (this.producido.Concepto != null && this.producido.Fecha != null && this.producido.ProducidoDetalle != null );
+        return (this.producido.Concepto != null && this.producido.Fecha != null && this.producido.ProducidoDetalle != null && this.producido.ProductoId > 0 && this.producido.cantidad > 0);
     }
 
     bool ValidarProducido() 
     {
-        return (this.cantidad != null && this.producto.ProductoId != null);
+        return (this.producido.ProductoId != null && this.producido.cantidad!= null);
     }
 
     bool ValidarDetalle()
@@ -397,6 +381,7 @@
         if(Validar())
         {
             producidos.Eliminar(this.producido);
+            
                 Nuevo();
                 ShowNotification( new NotificationMessage
                 {

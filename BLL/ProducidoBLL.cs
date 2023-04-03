@@ -31,6 +31,18 @@ public class ProducidoBLL
         
         try
         {
+
+            var Aproducir = _contexto.Producto.Find(producido.ProductoId);
+            
+            if(Aproducir != null)
+            {
+                Aproducir.Existencia += producido.cantidad;
+                _contexto.Producto.Update(Aproducir);
+                _contexto.SaveChanges();
+                _contexto.Entry(Aproducir).State = EntityState.Detached;
+            }
+
+
             if(producido != null)
             {
                 
@@ -86,8 +98,20 @@ public class ProducidoBLL
                 .AsNoTracking()
                 .SingleOrDefault();
 
+              
+
+
                 if(ProducidoAnterior != null)
                 {
+                    var AproducirA = _contexto.Producto.Find(ProducidoAnterior.ProductoId);
+                
+                    if(AproducirA != null)
+                    {
+                        AproducirA.Existencia -= producido.cantidad;
+                        _contexto.Producto.Update(AproducirA);
+                        _contexto.SaveChanges();
+                        _contexto.Entry(AproducirA).State = EntityState.Detached;
+                    }
                     foreach(var item in ProducidoAnterior.ProducidoDetalle)
                     {
                         var producto = _contexto.Producto.Find(item.ProductoId);
@@ -108,6 +132,15 @@ public class ProducidoBLL
                 }
                 if(producido != null)
                 {
+                      var Aproducir = _contexto.Producto.Find(producido.ProductoId);
+                
+                    if(Aproducir != null)
+                    {
+                        Aproducir.Existencia += producido.cantidad;
+                        _contexto.Producto.Update(Aproducir);
+                        _contexto.SaveChanges();
+                        _contexto.Entry(Aproducir).State = EntityState.Detached;
+                    }
                     foreach(var item in producido.ProducidoDetalle)
                     {
                         var producto = _contexto.Producto.Find(item.ProductoId);
@@ -148,6 +181,17 @@ public class ProducidoBLL
     public bool Eliminar(Producido producido)
     {
         try{
+
+            var Aproducir = _contexto.Producto.Find(producido.ProductoId);
+            
+            if(Aproducir != null)
+            {
+                Console.WriteLine($"\n\n\n\n\n\n\n\n\n\n\n\n\n\n{Aproducir.Existencia}-{producido.cantidad}\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                Aproducir.Existencia -= producido.cantidad;
+                _contexto.Producto.Update(Aproducir);
+
+            }
+
             if(producido != null)
             {
 

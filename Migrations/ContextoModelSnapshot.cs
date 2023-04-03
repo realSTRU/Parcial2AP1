@@ -29,6 +29,12 @@ namespace Parcial2AP1.Migrations
                     b.Property<DateTime>("Fecha")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("ProductoId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("cantidad")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("ProducidoId");
 
                     b.ToTable("Producido");

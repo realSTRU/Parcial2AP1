@@ -13,6 +13,12 @@ public class Producido
     [Required(ErrorMessage = "El concepto es obligatorio")]
     public string Concepto {get; set;}
 
+    [Required(ErrorMessage ="El producto a producir es requerido.")]
+    public int ProductoId {get; set;}
+
+    [Required(ErrorMessage ="La cantiad a producir es requerida")]
+    public int cantidad {get; set;}
+
     [ForeignKey("ProducidoId")]
     public List<ProducidoDetalle> ProducidoDetalle {get; set;} = new List<ProducidoDetalle>();
 
