@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Parcial2AP1.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20230330175217_Incial")]
-    partial class Incial
+    [Migration("20230403182945_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -113,6 +113,14 @@ namespace Parcial2AP1.Migrations
                             Descripcion = "Almendras",
                             Existencia = 2,
                             Precio = 50.0
+                        },
+                        new
+                        {
+                            ProductoId = 5,
+                            Costo = 200.0,
+                            Descripcion = "Sobre Mixto",
+                            Existencia = 0,
+                            Precio = 300.0
                         });
                 });
 

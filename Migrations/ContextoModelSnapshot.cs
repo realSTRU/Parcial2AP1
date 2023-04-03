@@ -110,6 +110,14 @@ namespace Parcial2AP1.Migrations
                             Descripcion = "Almendras",
                             Existencia = 2,
                             Precio = 50.0
+                        },
+                        new
+                        {
+                            ProductoId = 5,
+                            Costo = 200.0,
+                            Descripcion = "Sobre Mixto",
+                            Existencia = 0,
+                            Precio = 300.0
                         });
                 });
 

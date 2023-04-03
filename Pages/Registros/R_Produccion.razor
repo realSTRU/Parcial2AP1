@@ -57,7 +57,7 @@
                                 <div class="col-4">
                                     <label for="SelectP">Producto:</label>
                                     <select @bind ="detalle.ProductoId"class="form-select">
-                                        @foreach(var item in productos.GetList())
+                                        @foreach(var item in productos.GetListWithParameter(p => p.ProductoId != 5))
                                         {
                                             <option value="@item.ProductoId">@item.Descripcion</option>
                                         }
@@ -107,7 +107,7 @@
                             <legend>Producido:</legend>
                             <div class="row">
                                 <div class="col-3">
-                                    <select disabled = "true" @bind ="producto.ProductoId" class="form-select" >
+                                    <select disabled   @bind ="producto.ProductoId" class="form-select" >
                                         @foreach (var item in L_Producto)
                                         {
                                             <option value="@item.ProductoId">@item.Descripcion</option>
@@ -116,7 +116,7 @@
                                 </div>
                                 <div class="col-2">
                                     
-                                    <input disabled= "true" @bind-value ="cantidad" type="text" class="form-control" placeholder="Cantidad"/>
+                                    <input  disabled @bind-value ="cantidad" type="text" class="form-control" placeholder="Cantidad"/>
                                 </div>
                             </div>
                         </fieldset>
@@ -174,13 +174,16 @@
     public List<Producto> L_Producto {get; set;} = new List<Producto>();
 
     public int cantidad {get; set;}
+
+    protected string Catalizador = "disabled" ;
     
 
 
 
     protected override void OnInitialized()
     {
-        L_Producto = productos.GetList();
+       
+        L_Producto = productos.GetListWithParameter(p => p.ProductoId == 5);
         if(ProducidoId > 0)
         {
             this.producido.ProducidoId = ProducidoId;
@@ -280,6 +283,11 @@
                 {
                     producido.ProducidoDetalle?.Add(this.detalle);
                 }
+
+                if(this.producido.ProducidoDetalle.Count >= 2)
+                {
+                    Catalizador = "";
+                }
                 
                 this.detalle = new ProducidoDetalle();
                 
@@ -346,6 +354,8 @@
 
                 });
             }
+
+            
             
         }
         else

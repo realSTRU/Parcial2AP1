@@ -55,9 +55,8 @@ public class ProductoBLL
     }
 
     public bool Modificar(Producto producto)
-    {
-        _context.Entry(producto).State = EntityState.Modified;
-
+    {   
+        _context.Producto.Update(producto);
         bool guardo = _context.SaveChanges() > 0;
 
         _context.Entry(producto).State = EntityState.Detached;

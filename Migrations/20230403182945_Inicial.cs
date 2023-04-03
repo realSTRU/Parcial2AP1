@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Parcial2AP1.Migrations
 {
     /// <inheritdoc />
-    public partial class Incial : Migration
+    public partial class Inicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -72,7 +72,8 @@ namespace Parcial2AP1.Migrations
                     { 1, 20.0, "Mani Japones", 12, 35.0 },
                     { 2, 50.0, "Pistacho", 10, 75.0 },
                     { 3, 60.0, "Cajuil salado", 5, 90.0 },
-                    { 4, 33.0, "Almendras", 2, 50.0 }
+                    { 4, 33.0, "Almendras", 2, 50.0 },
+                    { 5, 200.0, "Sobre Mixto", 0, 300.0 }
                 });
 
             migrationBuilder.CreateIndex(

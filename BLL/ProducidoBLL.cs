@@ -44,7 +44,8 @@ public class ProducidoBLL
                         if(producto != null)
                         {
                             producto.Existencia -= item.Cantidad;
-                            _contexto.Entry(producto).State = EntityState.Modified;
+                            _contexto.Entry(producto).State = EntityState.Modified; 
+                            _contexto.Entry(producto).State = EntityState.Detached;
                         }
                     }
                     
@@ -89,8 +90,10 @@ public class ProducidoBLL
 
                         if(producto != null)
                         {
-                            _contexto.Producto.Update(producto);
                             producto.Existencia += item.Cantidad;
+                            _contexto.Producto.Update(producto);
+                            _contexto.Entry(producto).State = EntityState.Detached;
+                            
                             
                         }
 
@@ -106,13 +109,14 @@ public class ProducidoBLL
                         {
                             producto.Existencia -= item.Cantidad;
                             _contexto.Producto.Update(producto);
+                            _contexto.Entry(producto).State = EntityState.Detached;
                             
                         }
                     }
                 }
                 _contexto.Set<ProducidoDetalle>().RemoveRange(ProducidoAnterior.ProducidoDetalle);
                 _contexto.Set<ProducidoDetalle>().AddRange(producido.ProducidoDetalle);
-                _contexto.Entry(producido).State = EntityState.Modified;
+               _contexto.Producido.Update(producido);
                 bool paso = _contexto.SaveChanges() > 0;
 
                 _contexto.Entry(producido).State = EntityState.Detached;
@@ -145,7 +149,8 @@ public class ProducidoBLL
                     {
                         producto.Existencia += item.Cantidad;
                         _contexto.Producto.Update(producto);
-                        _contexto.SaveChanges();
+                        _contexto.Entry(producto).State = EntityState.Detached;
+                        
                     }
 
                 }

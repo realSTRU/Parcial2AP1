@@ -61,6 +61,14 @@ public class Contexto : DbContext
                 
 
 
+            },
+            new Producto
+            {
+                ProductoId = 5,
+                Descripcion ="Sobre Mixto",
+                Costo= 200,
+                Precio = 300,
+                Existencia = 0
             }
        
         );
