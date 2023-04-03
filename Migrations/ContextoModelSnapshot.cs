@@ -26,7 +26,7 @@ namespace Parcial2AP1.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateOnly>("Fecha")
+                    b.Property<DateTime>("Fecha")
                         .HasColumnType("TEXT");
 
                     b.HasKey("ProducidoId");

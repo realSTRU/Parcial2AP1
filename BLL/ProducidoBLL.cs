@@ -43,9 +43,13 @@ public class ProducidoBLL
 
                         if(producto != null)
                         {
+                            
                             producto.Existencia -= item.Cantidad;
-                            _contexto.Entry(producto).State = EntityState.Modified; 
+                            _contexto.Producto.Update(producto);
+                            _contexto.SaveChanges();
+                            
                             _contexto.Entry(producto).State = EntityState.Detached;
+                            
                         }
                     }
                     
@@ -90,8 +94,11 @@ public class ProducidoBLL
 
                         if(producto != null)
                         {
+                            
                             producto.Existencia += item.Cantidad;
                             _contexto.Producto.Update(producto);
+                            _contexto.SaveChanges();
+                        
                             _contexto.Entry(producto).State = EntityState.Detached;
                             
                             
@@ -109,7 +116,10 @@ public class ProducidoBLL
                         {
                             producto.Existencia -= item.Cantidad;
                             _contexto.Producto.Update(producto);
+                            _contexto.SaveChanges();
+                            
                             _contexto.Entry(producto).State = EntityState.Detached;
+                            
                             
                         }
                     }
@@ -149,8 +159,10 @@ public class ProducidoBLL
                     {
                         producto.Existencia += item.Cantidad;
                         _contexto.Producto.Update(producto);
-                        _contexto.Entry(producto).State = EntityState.Detached;
+                        _contexto.SaveChanges();
                         
+                        _contexto.Entry(producto).State = EntityState.Detached;
+                            
                     }
 
                 }
@@ -181,7 +193,7 @@ public class ProducidoBLL
 
     public List<Producido> GetList()
     {
-        return _contexto.Producido.ToList();
+        return _contexto.Producido.AsNoTracking().ToList();
     }
 
     public List<Producido> GetListWithParameter(Expression<Func<Producido, bool>> query){

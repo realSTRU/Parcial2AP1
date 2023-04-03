@@ -5,7 +5,7 @@
 
 <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced"
     AllowGrouping="true" AllowSorting="true" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
-    Data="L_Producido" TItem="Producido" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
+    Data="producido.GetList()" TItem="Producido" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
 
         <Columns>
             
@@ -17,17 +17,9 @@
 
         </Columns>
 
-    </RadzenDataGrid>
+</RadzenDataGrid>
 
 
-@code
-{
-    public List<Producido> L_Producido {get; set;} = new List<Producido>();
 
-        protected override void OnInitialized()
-        {
-            L_Producido = producido.GetList();
-        }
-}
 
 

@@ -18,7 +18,7 @@ public class ProductoBLL
 
     public List<Producto> GetList()
     {
-        return _context.Producto.ToList();
+        return _context.Producto.AsNoTracking().ToList();
     }
 
     public List<Producto> GetListWithParameter(Expression<Func<Producto, bool>> query)

@@ -5,7 +5,7 @@
 
 <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced"
     AllowGrouping="true" AllowSorting="true" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left"
-    Data= "L_Productos" TItem="Producto" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
+    Data= "productos.GetList()" TItem="Producto" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
 
         <Columns>
             
@@ -23,13 +23,4 @@
 
 
 
-@code
-{
-    public List<Producto> L_Productos {get; set;} = new List<Producto>();
-
-        protected override void OnInitialized()
-        {
-            L_Productos = productos.GetList();
-        }
-}
 

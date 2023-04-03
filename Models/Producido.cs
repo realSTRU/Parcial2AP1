@@ -8,7 +8,7 @@ public class Producido
     public int ProducidoId { get; set; }
 
     [Required(ErrorMessage = "La Fecha es un campo obligatorio.")]
-    public DateOnly Fecha {get; set;} = DateOnly.FromDateTime(DateTime.Now);
+    public DateTime Fecha {get; set;} = DateTime.Now;
 
     [Required(ErrorMessage = "El concepto es obligatorio")]
     public string Concepto {get; set;}
