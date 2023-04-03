@@ -1,6 +1,7 @@
 @page "/C_Produccion"
 
 @inject ProducidoBLL producido
+@inject ProductoBLL productos
 <PageTitle>Consulta Productos.</PageTitle>
 
 <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced"
@@ -8,10 +9,20 @@
     Data="producido.GetList()" TItem="Producido" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" ShowPagingSummary="true">
 
         <Columns>
-            
+             <RadzenDataGridColumn Filterable="false" Sortable="false" TItem="Producido" Frozen="true" Title="Links">
+                <Template Context="Item">
+                    <RadzenLink Path=@($"R_Produccion/{Item.ProducidoId}") Text="Ver" ><RadzenBadge BadgeStyle="BadgeStyle.Secondary" Text="Visualizar." /></RadzenLink>
+                </Template>
+            </RadzenDataGridColumn>
             <RadzenDataGridColumn TItem="Producido" Property="ProducidoId" Title="ProducidoId"/>
             <RadzenDataGridColumn TItem="Producido" Property="Concepto" Title="Concepto"/>
             <RadzenDataGridColumn TItem="Producido" Property="Fecha" Title="Fecha"/>
+            <RadzenDataGridColumn TItem="Producido" Filterable="true" Sortable="true"  Frozen="false" Title="Producido">
+                <Template Context="Item">
+                    <RadzenText>@(productos.Buscar(Item.ProductoId).Descripcion)</RadzenText>
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="Producido" Property="cantidad" Title="Cantidad producida"/>
             
 
 
