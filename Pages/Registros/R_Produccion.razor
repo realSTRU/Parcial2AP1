@@ -43,9 +43,11 @@
                         </div>
                         @* Concepto del producido producido que sera el nuevo producto *@
                         <div class="row">
-                            <div class ="col-6">
-                                <label for="Concepto">Concepto:</label>
-                                <input @bind-value="producido.Concepto" Name="Concepto" class ="form-control" id ="Concepto">
+         
+                            <div class="col-md-6">
+                                <RadzenLabel Text="Concepto:" />
+                                <RadzenTextBox style="width: 100%;" Name="Concepto" @bind-Value="producido.Concepto" />
+                                <RadzenRequiredValidator Component="Concepto" Text="El concepto es obligatorio" Popup="true" Style="position: absolute"/>
                             </div>
                         </div>
                         
@@ -79,6 +81,7 @@
                                         <th>ProductoId</th>
                                         <th>Descripción</th>
                                         <th>Cantidad</th>
+                                        <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -88,6 +91,8 @@
                                             <td>@item.ProductoId</td>
                                             <td>@productos.Buscar(item.ProductoId)?.Descripcion</td>
                                             <td>@item.Cantidad</td>
+                                            <td> <button class="btn btn-danger mr-2" onclick=@(() =>EliminarDetalle(item.DetalleId))><i class="oi oi-trash"></i></button>
+                                    </td>
                                         </tr>
                                     }
                                 </tbody>
@@ -95,6 +100,7 @@
                             <hr>
                             @* Cantidad total de los productos utilizados para realizar en nuevo *@
                             <div class="row d-flex justify-content-center">
+
                                 <div class ="col-5">
                                     <label for="Total">Cantidades totales utilizadas:</label>
                                     <input @bind-value="TotalProducido" disabled ="true" type="text" class="form-control"    />
@@ -125,7 +131,7 @@
                     @* Botones (Guardar, Limpiar y Eliminar) *@
                     <div class="card-footer d-flex justify-content-center">
                         <div class="row">
-                            <div class="btn-group">
+                        <div class="btn-group">
                                 <button class="btn btn-dark" type="submit" @onclick="Guardar"><i class="oi oi-document"/><b> Guardar</b></button>
                                 <button class="btn btn-secondary" type="button"@onclick="Nuevo"><i class="oi oi-file"/><b> Nuevo/Limpiar</b></button>
                                 <button class="btn btn-dark" type="button" @onclick="Eliminar"><i class="oi oi-trash"/><b> Eliminar</b></button>
@@ -407,6 +413,11 @@
         
             
         
+    }
+
+     public void EliminarDetalle(int Id)
+    {
+        this.producido.ProducidoDetalle.Remove(producido.ProducidoDetalle.Where(p=>p.DetalleId == Id).SingleOrDefault());
     }
     void ShowNotification(NotificationMessage message)
     {
